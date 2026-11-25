@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import emblem from '../assets/emblem.png';
+import Icon from './Icon.astro';
+import { nav, site, wa } from '../data/site';
+const order = wa('Bonjour, je souhaite passer une commande chez SOCOOCA PK.');
+---
+<div class="progress" id="progress" aria-hidden="true"></div>
+<header class="header" id="header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label={`${site.name}, accueil`}>
+      <Image src={emblem} alt="" width={92} height={92} loading="eager" />
+      <span><strong>{site.name}</strong><small>Producteurs de Koukoué</small></span>
+    </a>
+    <nav class="nav" aria-label="Navigation principale">
+      {nav.map((n) => <a href={n.href} data-nav={n.href.replace('/#', '')}>{n.label}</a>)}
+    </nav>
+    <div class="header-cta">
+      <a class="btn btn--amber btn--sm" href={order} target="_blank" rel="noopener noreferrer">
+        Commander <span class="arr"><Icon name="arrow" /></span>
+      </a>
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="drawer" aria-label="Ouvrir le menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="drawer" id="drawer" aria-label="Menu mobile">
+  <nav aria-label="Navigation mobile">
+    {nav.map((n, i) => <a href={n.href}><span>0{i + 1}</span>{n.label}</a>)}
+  </nav>
+  <a class="btn btn--amber" href={order} target="_blank" rel="noopener noreferrer">
+    Passer une commande <span class="arr"><Icon name="wa" /></span>
+  </a>
+</div>

@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
+---
+<Base title={`Politique de confidentialité – ${site.name}`} description={`Politique de confidentialité du site de ${site.name}.`} noindex>
+  <section class="page-hero grain"><div class="wrap"><span class="eyebrow">Vos données</span><h1 class="display" style="margin-top:20px">Politique de <em>confidentialité</em></h1></div></section>
+  <div class="wrap prose">
+    <h2>Données collectées</h2>
+    <p>Lorsque vous utilisez le formulaire de contact, nous recevons les informations que vous saisissez : nom, adresse email, numéro de téléphone (facultatif), sujet et message.</p>
+    <h2>Utilisation</h2>
+    <p>Ces informations servent uniquement à répondre à votre demande. Elles ne sont ni vendues, ni cédées à des tiers à des fins commerciales.</p>
+    <h2>Mesure d’audience et cookies</h2>
+    <p>Ce site n’utilise ni cookie publicitaire, ni outil de suivi. Les polices de caractères sont hébergées sur le site lui-même.</p>
+    <h2>Messageries tierces</h2>
+    <p>Les boutons WhatsApp et email ouvrent l’application de votre choix : les échanges sont alors soumis aux conditions de ces services.</p>
+    <h2>Vos droits</h2>
+    <p>Vous pouvez demander l’accès, la rectification ou la suppression de vos données en écrivant à <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    <p style="margin-top:40px"><a href="/">← Retour à l’accueil</a></p>
+  </div>
+</Base>

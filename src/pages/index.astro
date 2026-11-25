@@ -1,0 +1,352 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import emblem from '../assets/emblem.png';
+import boil from '../assets/b-oil.jpg';
+import p1 from '../assets/photo-1.jpg';
+import p2 from '../assets/photo-2.jpg';
+import p3 from '../assets/photo-3.jpg';
+import p4 from '../assets/photo-4.jpg';
+import p5 from '../assets/photo-5.jpg';
+import p6 from '../assets/photo-6.jpg';
+import p7 from '../assets/photo-7.jpg';
+import p8 from '../assets/photo-8.jpg';
+import { site, wa, values, stats, ticker, news, subjects } from '../data/site';
+
+const fmt = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+
+const gallery = [
+  { img: p5, alt: 'Un producteur traverse la palmeraie de Koukoué' },
+  { img: p6, alt: 'L’huile rouge coule dans l’entonnoir au pressoir' },
+  { img: p2, alt: 'Préparation des sachets en pépinière de palmiers à huile' },
+  { img: p1, alt: 'Gingembre en pleine croissance sur la parcelle' },
+  { img: p4, alt: 'Jeune palmier à huile en plantation' },
+  { img: p3, alt: 'Une productrice dans la pépinière de jeunes palmiers' },
+  { img: p7, alt: 'Graines de palmier en germination' },
+  { img: p8, alt: 'Planches de pépinière : jeunes palmiers alignés' },
+];
+const galleryFull = await Promise.all(gallery.map((g) => getImage({ src: g.img, width: 1600, format: 'webp', quality: 80 })));
+
+const steps = [
+  { img: p7, alt: 'Graines de palmier en germination', title: 'La graine', text: 'Tout commence par la germination des graines de palmier à huile, soigneusement suivies avant leur mise en pépinière.' },
+  { img: p8, alt: 'Planches de pépinière de jeunes palmiers', title: 'La pépinière', text: 'Les jeunes plants grandissent en sachets, alignés et entretenus. Plants de cacao et de palmier sont proposés aux planteurs.' },
+  { img: p5, alt: 'Palmeraie de Koukoué', title: 'La palmeraie', text: 'Plantés sur les terres de Koukoué, les palmiers produisent les régimes que les membres récoltent pendant la campagne de collecte.' },
+  { img: p6, alt: 'Huile rouge versée au pressoir', title: 'Le pressage', text: 'Les régimes sont transformés au pressoir communautaire : l’huile rouge s’écoule, avec une transformation menée sur place.' },
+  { img: boil, alt: 'Bouteille de B-OIL', title: 'La bouteille', text: 'L’huile rouge est mise en bouteille sous la marque B-OIL, 100 % naturelle, pour arriver dans votre cuisine.', top: true },
+];
+
+const orderGeneral = wa('Bonjour, je souhaite connaître les produits actuellement disponibles chez SOCOOCA PK.');
+const orderBoil = wa('Bonjour SOCOOCA PK, je suis intéressé(e) par la bouteille B-OIL (huile rouge 100 % naturelle). Je souhaite connaître les disponibilités et passer commande.', site.boilWhatsapp);
+const ringText = 'Koukoué · Cameroun · Coopérative · Depuis la graine · ';
+---
+<Base schema>
+  <!-- ═══ HERO ═══ -->
+  <section class="hero grain" id="accueil" aria-labelledby="h1">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="hero-pill" data-reveal><i></i>{site.tagline} · Cameroun</p>
+        <h1 id="h1" data-reveal style="--d:80ms">Cultiver ensemble, <em>de la graine à la bouteille.</em></h1>
+        <p class="lead" data-reveal style="--d:160ms">
+          SOCOOCA PK rassemble les producteurs de Koukoué autour d’une agriculture diversifiée : cultures vivrières et de rente,
+          pépinière, pressage d’huile rouge et élevage. Valoriser durablement le travail des producteurs et leur terroir.
+        </p>
+        <div class="hero-actions" data-reveal style="--d:240ms">
+          <a class="btn btn--amber" href={orderGeneral} target="_blank" rel="noopener noreferrer">Produits disponibles <span class="arr"><Icon name="arrow" /></span></a>
+          <a class="btn btn--ghost" href="#cooperative">Découvrir la coopérative</a>
+        </div>
+      </div>
+
+      <div class="hero-art" data-reveal="scale" style="--d:200ms">
+        <div class="arch">
+          <Image src={p5} alt="Un producteur marche entre les palmiers de la palmeraie de Koukoué" widths={[480, 720, 960]} sizes="(max-width: 960px) 70vw, 36vw" loading="eager" fetchpriority="high" format="webp" quality={72} data-parallax="0.06" />
+        </div>
+        <div class="orb">
+          <Image src={p6} alt="De l’huile rouge versée dans un entonnoir au pressoir" widths={[320, 520]} sizes="(max-width: 960px) 40vw, 20vw" loading="eager" format="webp" quality={72} />
+        </div>
+        <div class="ring" aria-hidden="true">
+          <svg class="text" viewBox="0 0 120 120">
+            <defs><path id="circ" d="M60 60m-48 0a48 48 0 1 1 96 0a48 48 0 1 1-96 0" /></defs>
+            <text><textPath href="#circ" textLength="298">{ringText}</textPath></text>
+          </svg>
+          <Image class="emb" src={emblem} alt="" width={120} height={120} loading="eager" />
+        </div>
+        <a class="chip" href="#b-oil">
+          <span class="dot"><Icon name="drop" /></span>
+          <span><strong>B-OIL</strong><small>Huile rouge · disponible</small></span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-foot">
+      <div class="wrap">
+        <a class="scroll-cue" href="#cooperative"><i></i>Défiler</a>
+        <span>Koukoué · Région du Littoral</span>
+        <span>Lun – Ven · 8h – 17h</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BANDEAU ═══ -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <ul>{ticker.map((t) => <li>{t}</li>)}</ul>
+      <ul>{ticker.map((t) => <li>{t}</li>)}</ul>
+    </div>
+  </div>
+
+  <!-- ═══ COOPÉRATIVE ═══ -->
+  <section class="section" id="cooperative" aria-labelledby="coop-title">
+    <div class="wrap">
+      <span class="eyebrow" data-reveal>La coopérative</span>
+      <p class="manifesto" id="coop-title" style="margin-top:28px">
+        Fondée par des producteurs locaux, la SOCOOCA PK est bien plus qu’une structure agricole : une <em>communauté soudée</em> autour de la solidarité, de la transparence et du développement durable.
+      </p>
+
+      <div class="coop-grid">
+        <div data-reveal="left">
+          <div class="frame">
+            <Image src={p3} alt="Une productrice au travail dans la pépinière de jeunes palmiers de SOCOOCA PK" widths={[480, 720, 960]} sizes="(max-width: 960px) 90vw, 40vw" format="webp" quality={72} data-parallax="0.05" />
+            <div class="frame-badge"><strong>12 ans</strong><span>d’engagement paysan<br />au cœur de Koukoué</span></div>
+          </div>
+        </div>
+        <div class="coop-copy" data-reveal="right">
+          <h2 class="h2">Une coopérative <em>engagée</em> pour l’agriculture durable</h2>
+          <p class="lead">Nous accompagnons chaque membre de la semence à la mise en marché.</p>
+          <p>Accès aux intrants, formation, financement et circuits de commercialisation équitables : notre gouvernance participative, avec un Conseil d’Administration élu, garantit que chaque producteur a voix au chapitre.</p>
+          <ul class="values">
+            {values.map((v) => <li data-reveal><h3>{v.title}</h3><p>{v.text}</p></li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div class="stats">
+        {stats.map((s, i) => (
+          <div class="stat" data-reveal style={`--d:${i * 120}ms`}>
+            <b data-count={s.value} data-suffix={s.suffix}>{s.value}{s.suffix}</b>
+            <span>{s.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ B-OIL ═══ -->
+  <section class="section boil on-dark grain" id="b-oil" aria-labelledby="boil-title">
+    <div class="wrap boil-grid">
+      <div class="flyer-wrap" data-reveal="scale">
+        <div class="flyer">
+          <Image src={boil} alt="Affiche B-OIL : bouteille d’huile de palme rouge 100 % naturelle, pressée par nos soins" widths={[420, 640, 860]} sizes="(max-width: 960px) 80vw, 420px" format="webp" quality={72} />
+        </div>
+      </div>
+      <div style="position:relative;z-index:2">
+        <div class="avail" data-reveal><i></i>À la une · Disponible dès maintenant</div>
+        <h2 class="h2" id="boil-title" data-reveal style="--d:80ms">B-OIL, l’authenticité <em>au cœur de votre cuisine.</em></h2>
+        <p class="lead" data-reveal style="--d:140ms">
+          Une huile rouge 100 % naturelle et bio, extraite selon des méthodes traditionnelles pour préserver toute sa richesse,
+          sa saveur unique et sa belle couleur dorée. Saine, pure et pleine de bienfaits pour toute la famille.
+        </p>
+        <ul class="ticks" data-reveal style="--d:200ms">
+          {['100 % naturelle, sans additifs', 'Pressée par nos soins', 'Riche en nutriments', 'Idéale pour toutes vos recettes'].map((t) => (
+            <li><Icon name="check" />{t}</li>
+          ))}
+        </ul>
+        <div class="price-row" data-reveal style="--d:260ms">
+          <div class="price"><b>1 250</b><span>FCFA · le litre</span></div>
+          <a class="btn btn--amber" href={orderBoil} target="_blank" rel="noopener noreferrer"><Icon name="wa" class="ico" />Commander sur WhatsApp <span class="arr"><Icon name="arrow" /></span></a>
+        </div>
+        <p class="boil-contacts" data-reveal style="--d:300ms">
+          Livraison et expédition possibles · Contact B-OIL :
+          {site.boilPhones.map((p, i) => <><a href={`tel:+237${p.replace(/\s/g, '')}`}>{p}</a>{i < site.boilPhones.length - 1 ? ' / ' : ''}</>)}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRODUCTIONS ═══ -->
+  <section class="section" id="productions" aria-labelledby="prod-title">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow" data-reveal>Nos productions</span>
+          <h2 class="h2" id="prod-title" data-reveal style="margin-top:20px;--d:80ms">Une production <em>diversifiée</em>, de la terre à la transformation.</h2>
+        </div>
+        <p class="lead" data-reveal style="--d:140ms">Plusieurs activités agricoles et d’élevage, du champ jusqu’au premier niveau de transformation.</p>
+      </div>
+
+      <div class="bento">
+        <article class="tile photo t-rente" id="rente" data-reveal>
+          <Image src={p1} alt="Plants de gingembre sur une parcelle de la coopérative" widths={[640, 960, 1280]} sizes="(max-width: 960px) 100vw, 58vw" format="webp" quality={72} />
+          <span class="num">01 · Cultures de rente</span>
+          <h3>Cacao, palmier à huile, gingembre, curcuma.</h3>
+          <p>Des filières structurantes pour nos membres, avec une pépinière qui fournit plants de cacao et de palmier.</p>
+          <div class="tags"><span>Cacao</span><span>Palmier à huile</span><span>Gingembre</span><span>Curcuma</span></div>
+        </article>
+
+        <article class="tile photo t-palm" id="pepiniere" data-reveal style="--d:100ms">
+          <Image src={p2} alt="Équipe au travail dans la pépinière de palmiers" widths={[480, 800]} sizes="(max-width: 960px) 100vw, 40vw" format="webp" quality={72} />
+          <span class="num">02 · Pépinière</span>
+          <h3>Des plants pour les planteurs.</h3>
+          <p>Plants de cacao et de palmier à huile disponibles à la pépinière de Koukoué.</p>
+        </article>
+
+        <article class="tile photo t-trans" id="transformation" data-reveal style="--d:140ms">
+          <Image src={p6} alt="L’huile rouge s’écoule du pressoir dans un entonnoir" widths={[480, 800]} sizes="(max-width: 960px) 100vw, 40vw" format="webp" quality={72} />
+          <span class="num">03 · Transformation</span>
+          <h3>L’huile rouge, pressée ici.</h3>
+          <p>Valorisation des régimes de palme avec un pressoir communautaire.</p>
+        </article>
+
+        <article class="tile solid-cream t-viv" id="vivrieres" data-reveal>
+          <svg class="glyph" viewBox="0 0 100 100"><path d="M50 92V40"/><path d="M50 44C38 20 18 18 6 26c4 20 20 28 44 18Z"/><path d="M50 52C62 28 82 26 94 34c-4 20-20 28-44 18Z"/></svg>
+          <span class="num" style="color:var(--oil)">04 · Cultures vivrières</span>
+          <h3>La base de l’alimentation locale.</h3>
+          <p style="color:var(--muted)">Pour nourrir les marchés de la région.</p>
+          <div class="tags"><span>Banane-plantain</span><span>Igname</span><span>Macabo</span><span>Ananas</span></div>
+        </article>
+
+        <article class="tile solid-green t-elev" id="elevage" data-reveal style="--d:100ms">
+          <div class="pattern"></div>
+          <span class="num" style="color:var(--amber)">05 · Élevage</span>
+          <h3>Canards &amp; escargots.</h3>
+          <p style="opacity:.78">Un suivi sanitaire rigoureux.</p>
+          <div class="tags"><span>Canard</span><span>Escargot</span></div>
+        </article>
+
+        <article class="tile dashed t-next" data-reveal style="--d:140ms">
+          <span class="num" style="color:var(--muted)">06 · À venir</span>
+          <h3>Demain.</h3>
+          <p style="color:var(--muted)">De nouveaux élevages sont envisagés.</p>
+          <div class="tags"><span class="soon">Lapin</span><span class="soon">Hérisson</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PARCOURS ═══ -->
+  <section class="section parcours" id="parcours" aria-labelledby="parc-title">
+    <div class="wrap p-grid">
+      <div class="p-sticky" data-reveal="left">
+        <span class="eyebrow">Le parcours de l’huile</span>
+        <h2 class="h2" id="parc-title" style="margin-top:20px">De la graine <em>à la bouteille.</em></h2>
+        <p class="lead">Cinq étapes, un seul territoire : chaque bouteille de B-OIL raconte le travail de nos producteurs, de la pépinière au pressoir.</p>
+        <p style="margin-top:32px"><a class="btn btn--ink" href={orderBoil} target="_blank" rel="noopener noreferrer">Goûter B-OIL <span class="arr"><Icon name="arrow" /></span></a></p>
+      </div>
+      <ol class="steps" style="list-style:none;padding:0;margin:0">
+        {steps.map((s) => (
+          <li class="step">
+            <div>
+              <figure><Image src={s.img} alt={s.alt} widths={[480, 720, 960]} sizes="(max-width: 960px) 80vw, 46vw" format="webp" quality={72} style={s.top ? 'object-position:top' : undefined} /></figure>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══ ACTUALITÉS ═══ -->
+  <section class="section" id="actualites" aria-labelledby="news-title">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow" data-reveal>Actualités</span>
+          <h2 class="h2" id="news-title" data-reveal style="margin-top:20px;--d:80ms">Dernières <em>nouvelles</em> de la coopérative.</h2>
+        </div>
+        <p class="lead" data-reveal style="--d:140ms">Activités, événements et annonces de SOCOOCA PK à Koukoué.</p>
+      </div>
+      <div class="news-list">
+        {news.map((n) => (
+          <article class="news-item" data-reveal>
+            <div class="news-meta"><time datetime={n.date}>{fmt.format(new Date(n.date))}</time><span>{n.tag}</span></div>
+            <div><h3>{n.title}</h3><p>{n.text}</p></div>
+            <a class="round" href={n.wa} target="_blank" rel="noopener noreferrer" aria-label={`${n.cta} : ${n.title}`}><Icon name="arrow" /></a>
+          </article>
+        ))}
+      </div>
+      <div class="news-foot" data-reveal>
+        <a class="btn btn--ink" href={wa('Bonjour, je souhaite recevoir les actualités de SOCOOCA PK.')} target="_blank" rel="noopener noreferrer">Recevoir les actualités sur WhatsApp <span class="arr"><Icon name="wa" /></span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ GALERIE ═══ -->
+  <section class="section gallery on-dark grain" id="galerie" aria-labelledby="gal-title">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow" data-reveal>Galerie</span>
+          <h2 class="h2" id="gal-title" data-reveal style="margin-top:20px;--d:80ms">La vie de la <em>plantation</em>, à Koukoué.</h2>
+        </div>
+        <p class="lead" data-reveal style="--d:140ms">Un regard authentique sur le quotidien de nos producteurs et la richesse de nos cultures.</p>
+      </div>
+      <div class="masonry">
+        {gallery.map((g, i) => (
+          <button class="shot" type="button" data-full={galleryFull[i].src} data-alt={g.alt} data-reveal style={`--d:${(i % 3) * 100}ms`} aria-label={`Agrandir : ${g.alt}`}>
+            <Image src={g.img} alt={g.alt} widths={[420, 640, 900]} sizes="(max-width: 960px) 50vw, 33vw" format="webp" quality={72} />
+            <span class="cap">{g.alt}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+  <dialog class="lightbox" id="lightbox" aria-label="Image agrandie">
+    <div class="lb-inner">
+      <img id="lbImg" src="" alt="" />
+      <p class="lb-cap" id="lbCap"></p>
+      <button class="lb-btn lb-close" id="lbClose" type="button" aria-label="Fermer"><Icon name="close" /></button>
+      <button class="lb-btn lb-prev" id="lbPrev" type="button" aria-label="Photo précédente"><Icon name="prev" /></button>
+      <button class="lb-btn lb-next" id="lbNext" type="button" aria-label="Photo suivante"><Icon name="next" /></button>
+    </div>
+  </dialog>
+
+  <!-- ═══ CITATION ═══ -->
+  <section class="section quote" aria-label="Citation">
+    <div class="wrap" data-reveal>
+      <blockquote>Ensemble, les producteurs de Koukoué bâtissent une agriculture prospère, durable et fière de son terroir. Chaque régime récolté est une victoire collective.</blockquote>
+      <cite><strong>La Présidente du Conseil d’Administration</strong>SOCOOCA PK · Koukoué, Cameroun</cite>
+    </div>
+  </section>
+
+  <!-- ═══ CONTACT ═══ -->
+  <section class="section" id="contact" aria-labelledby="contact-title">
+    <div class="wrap contact-grid">
+      <div data-reveal="left">
+        <span class="eyebrow">Contactez-nous</span>
+        <h2 class="h2" id="contact-title" style="margin-top:20px">Parlons de votre <em>projet.</em></h2>
+        <p class="lead" style="margin-top:22px">Rejoindre la coopérative, commander nos produits, établir un partenariat : notre équipe vous répond.</p>
+        <dl class="contact-list" style="margin:44px 0 0">
+          <div class="c-row"><dt>Adresse</dt><dd style="margin:0"><span>{site.address}</span></dd></div>
+          {site.phones.map((p) => <a class="c-row" href={`tel:${p.tel}`}><b>{p.label}</b><span>{p.display}</span></a>)}
+          <a class="c-row" href={`mailto:${site.email}?subject=Contact%20SOCOOCA%20PK`}><b>Email</b><span>{site.email}</span></a>
+          <div class="c-row"><dt>Horaires</dt><dd style="margin:0"><span style="font-size:1.1rem">{site.hours}</span></dd></div>
+        </dl>
+        <p class="big-wa"><a class="btn" style="--bg:#1f9d55" href={wa('Bonjour, je souhaite contacter SOCOOCA PK.')} target="_blank" rel="noopener noreferrer">Écrire sur WhatsApp <span class="arr"><Icon name="wa" /></span></a></p>
+      </div>
+
+      <form class="form" id="contactForm" name="contact" method="POST" action="/merci/" data-netlify="true" netlify-honeypot="bot-field" data-reveal="right">
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="hp" aria-hidden="true"><label>Ne pas remplir <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+        <h3>Envoyez-nous un message</h3>
+        <p>Nous répondons généralement sous 24 h ouvrées.</p>
+        <div class="row">
+          <div class="field"><label for="f-nom">Votre nom *</label><input id="f-nom" name="nom" type="text" autocomplete="name" placeholder="Nom complet" required /></div>
+          <div class="field"><label for="f-email">Votre email *</label><input id="f-email" name="email" type="email" autocomplete="email" placeholder="vous@exemple.com" required /></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="f-tel">Téléphone</label><input id="f-tel" name="telephone" type="tel" autocomplete="tel" placeholder="+237 6XX XXX XXX" /></div>
+          <div class="field">
+            <label for="f-sujet">Sujet *</label>
+            <select id="f-sujet" name="sujet" required>
+              <option value="" disabled selected>Choisir un sujet</option>
+              {subjects.map(([v, l]) => <option value={v}>{l}</option>)}
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="f-msg">Votre message *</label><textarea id="f-msg" name="message" placeholder="Décrivez votre demande…" required></textarea></div>
+        <button class="btn btn--amber" type="submit"><span class="lbl">Envoyer le message</span> <span class="arr"><Icon name="arrow" /></span></button>
+        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+</Base>
