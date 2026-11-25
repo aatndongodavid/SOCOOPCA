@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
+---
+<Base title={`Mentions légales – ${site.name}`} description={`Mentions légales du site de ${site.name}.`} noindex>
+  <section class="page-hero grain"><div class="wrap"><span class="eyebrow">Informations légales</span><h1 class="display" style="margin-top:20px">Mentions <em>légales</em></h1></div></section>
+  <div class="wrap prose">
+    <h2>Éditeur du site</h2>
+    <p>{site.fullName} ({site.name}), coopérative agricole basée à {site.address}.</p>
+    <p>Contact : <a href={`mailto:${site.email}`}>{site.email}</a> · <a href={`tel:${site.phones[0].tel}`}>{site.phones[0].display}</a></p>
+    <h2>Hébergement</h2>
+    <p>Ce site est hébergé par Netlify, Inc.</p>
+    <h2>Propriété intellectuelle</h2>
+    <p>Les textes, photographies, logo et visuels (dont l’affiche B-OIL) sont la propriété de {site.name}. Toute reproduction sans autorisation écrite préalable est interdite.</p>
+    <h2>Responsabilité</h2>
+    <p>Les informations (disponibilités, prix, actualités) sont données à titre indicatif et peuvent évoluer. Pour confirmer une disponibilité ou passer commande, contactez-nous directement.</p>
+    <p style="margin-top:40px"><a href="/">← Retour à l’accueil</a></p>
+  </div>
+</Base>

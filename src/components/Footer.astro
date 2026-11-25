@@ -1,0 +1,41 @@
+---
+import { Image } from 'astro:assets';
+import emblem from '../assets/emblem.png';
+import Icon from './Icon.astro';
+import { nav, site } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="footer grain">
+  <div class="wrap">
+    <div class="f-grid">
+      <div>
+        <a class="brand" href="/">
+          <Image src={emblem} alt="" width={92} height={92} loading="lazy" />
+          <span><strong>{site.name}</strong><small>Producteurs de Koukoué</small></span>
+        </a>
+        <p class="about">{site.fullName}, unie pour valoriser nos filières agricoles : huile rouge, cacao, palmier à huile et cultures vivrières.</p>
+      </div>
+      <div>
+        <h4>Navigation</h4>
+        <ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}<li><a href="/actualites/">Toutes les actualités</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul class="f-contact">
+          <li>{site.address}</li>
+          {site.phones.map((p) => <li><a href={`tel:${p.tel}`}>{p.display}</a></li>)}
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li>Lun – Ven · 8h00 – 17h00</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="wordmark" aria-hidden="true">SOCOOCA</div>
+  <div class="f-bottom">
+    <div class="wrap" style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 32px;">
+      <span>© {year} {site.name} · Tous droits réservés · <a href="/mentions-legales/">Mentions légales</a> · <a href="/confidentialite/">Confidentialité</a></span>
+      <span>Site conçu par <a href="https://gemula.org" target="_blank" rel="noopener">Gemula</a> pour les producteurs de Koukoué</span>
+    </div>
+  </div>
+</footer>
+<button class="to-top" id="toTop" aria-label="Retour en haut"><Icon name="up" /></button>

@@ -1,0 +1,104 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Intro from '../components/Intro.astro';
+import { site } from '../data/site';
+
+interface Props { title?: string; description?: string; noindex?: boolean; schema?: boolean; intro?: boolean; type?: string; published?: Date }
+const {
+  title = `${site.name} – Coopérative agricole de Koukoué | Huile rouge B-OIL, cacao, plants de palmier`,
+  description = site.description,
+  noindex = false,
+  schema = false,
+  intro = false,
+  type = 'website',
+  published,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogImage = new URL('/og-image.jpg', site.url).href;
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${site.url}/#org`,
+      name: site.name,
+      legalName: site.fullName,
+      url: site.url,
+      logo: `${site.url}/apple-touch-icon.png`,
+      email: site.email,
+      sameAs: [`https://wa.me/${site.whatsapp}`],
+    },
+    {
+      '@type': 'LocalBusiness',
+      '@id': `${site.url}/#local`,
+      name: site.name,
+      description: site.description,
+      image: ogImage,
+      url: site.url,
+      telephone: site.phones[0].tel,
+      email: site.email,
+      address: { '@type': 'PostalAddress', addressLocality: 'Koukoué', addressRegion: 'Littoral', addressCountry: 'CM' },
+      geo: { '@type': 'GeoCoordinates', latitude: 4.0482, longitude: 9.7742 },
+      openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:00', closes: '17:00' }],
+      parentOrganization: { '@id': `${site.url}/#org` },
+    },
+    {
+      '@type': 'Product',
+      name: 'B-OIL, huile de palme rouge 100 % naturelle',
+      brand: { '@type': 'Brand', name: 'B-OIL' },
+      description: 'Huile rouge 100 % naturelle, sans additifs, pressée par la coopérative SOCOOCA PK à Koukoué.',
+      offers: { '@type': 'Offer', priceCurrency: 'XAF', price: '1250', availability: 'https://schema.org/InStock', url: `${site.url}/#b-oil` },
+    },
+  ],
+};
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={site.name} />
+    <meta name="theme-color" content="#07200f" />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'} />
+    <meta name="google-site-verification" content="O38VUKP1qg76oyUGB8_EsNUCy7vFSZqUFfgb7JgFA7U" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:type" content={type} />
+    {published && <meta property="article:published_time" content={published.toISOString()} />}
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+    <script is:inline define:vars={{ intro }}>
+      const r = document.documentElement; r.classList.add('js');
+      try {
+        if (intro && !sessionStorage.getItem('socooca-intro') && !matchMedia('(prefers-reduced-motion: reduce)').matches) r.classList.add('intro');
+      } catch {}
+    </script>
+  </head>
+  <body>
+    {intro && <Intro />}
+    <a class="skip" href="#main">Aller au contenu</a>
+    <Header />
+    <main id="main"><slot /></main>
+    <Footer />
+    <script>import '../scripts/main.ts';</script>
+  </body>
+</html>

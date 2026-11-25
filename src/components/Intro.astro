@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import emblem from '../assets/emblem.png';
+// Écran d'ouverture : l'emblème apparaît, puis le nom. Joué une fois par session,
+// jamais si le visiteur limite les animations ; un clic le passe.
+---
+<div id="intro" aria-hidden="true">
+  <div class="intro-in">
+    <Image class="intro-emblem" src={emblem} alt="" width={160} height={160} loading="eager" fetchpriority="high" />
+    <p class="intro-name">SOCOOCA <em>PK</em></p>
+    <p class="intro-sub">Producteurs de Koukoué</p>
+  </div>
+</div>
+<script>
+  const intro = document.getElementById('intro');
+  const root = document.documentElement;
+  if (intro && root.classList.contains('intro')) {
+    const finish = () => {
+      intro.classList.add('is-done');
+      try { sessionStorage.setItem('socooca-intro', '1'); } catch {}
+      setTimeout(() => root.classList.remove('intro'), 700);
+    };
+    setTimeout(finish, 2200);
+    intro.addEventListener('click', finish, { once: true });
+  }
+</script>
