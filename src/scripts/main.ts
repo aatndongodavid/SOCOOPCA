@@ -140,14 +140,60 @@ if (lb && shots.length) {
   lb.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') show(idx - 1); if (e.key === 'ArrowRight') show(idx + 1); });
 }
 
-/* ── Formulaire (Netlify Forms, envoi sans rechargement) ── */
+/* ── Formulaire : validation, anti-spam léger, envoi Netlify Forms ──
+   Filtres (sans captcha) : champ piège invisible, délai minimal de 3 s,
+   un envoi par minute et par navigateur, rejet des messages trop chargés en liens. */
 const form = one<HTMLFormElement>('#contactForm');
 if (form) {
   const status = one('#formStatus')!;
   const btn = one<HTMLButtonElement>('button[type=submit]', form)!;
   const labelEl = one('.lbl', btn)!;
+  const openedAt = Date.now();
+  const RATE_KEY = 'socooca-form-sent';
+  type F = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+  const fields = all<F>('input:not([data-hp]):not([type=hidden]), textarea, select', form).filter((f) => f.id);
+  const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  // Présélection du sujet : /?sujet=adhesion#contact
+  const wanted = new URLSearchParams(location.search).get('sujet');
+  const subject = one<HTMLSelectElement>('#f-sujet', form);
+  if (wanted && subject && [...subject.options].some((o) => o.value === wanted)) subject.value = wanted;
+
+  const errorFor = (f: F): string => {
+    if (f instanceof HTMLInputElement && f.type === 'checkbox') return f.required && !f.checked ? 'Cochez cette case pour que nous puissions vous répondre.' : '';
+    const v = f.value.trim();
+    if (f.required && !v) return 'Ce champ est obligatoire.';
+    if (v && f instanceof HTMLInputElement && f.type === 'email' && !EMAIL.test(v)) return 'Indiquez une adresse email valide, par exemple nom@exemple.com.';
+    if (v && f instanceof HTMLTextAreaElement && v.length < 10) return 'Écrivez au moins 10 caractères.';
+    return '';
+  };
+  const show = (f: F, msg: string) => {
+    const id = `${f.id}-error`;
+    let el = document.getElementById(id);
+    if (!el) { el = document.createElement('p'); el.id = id; el.className = 'field-error'; (f.closest('.field, .consent') ?? f).appendChild(el); }
+    el.textContent = msg; el.hidden = !msg;
+    f.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    if (msg) f.setAttribute('aria-describedby', id); else f.removeAttribute('aria-describedby');
+  };
+  fields.forEach((f) => {
+    f.addEventListener('blur', () => { f.dataset.touched = '1'; show(f, errorFor(f)); });
+    f.addEventListener('input', () => { if (f.dataset.touched) show(f, errorFor(f)); });
+    f.addEventListener('change', () => show(f, errorFor(f)));
+  });
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    let first: F | null = null;
+    fields.forEach((f) => { const m = errorFor(f); show(f, m); if (m && !first) first = f; });
+    if (first) { status.className = 'form-status err'; status.textContent = 'Certains champs sont à corriger.'; (first as F).focus(); return; }
+
+    const hp = one<HTMLInputElement>('[data-hp]', form);
+    const message = (one<HTMLTextAreaElement>('#f-msg', form)?.value ?? '');
+    const spam = (hp && hp.value) || Date.now() - openedAt < 3000 || (message.match(/https?:\/\/|www\./gi) ?? []).length > 2;
+    const okText = 'Merci ! Votre message est bien parti. Nous vous répondons sous 24 h ouvrées.';
+    if (spam) { status.className = 'form-status ok'; status.textContent = okText; form.reset(); return; } // réponse neutre pour les robots
+    try { if (Date.now() - Number(localStorage.getItem(RATE_KEY) || 0) < 60000) { status.className = 'form-status err'; status.textContent = 'Votre message a déjà été envoyé. Patientez une minute avant un nouvel envoi.'; return; } } catch {}
+
     const label = labelEl.textContent;
     btn.disabled = true; labelEl.textContent = 'Envoi en cours…';
     status.className = 'form-status';
@@ -155,9 +201,10 @@ if (form) {
       const body = new URLSearchParams(new FormData(form) as unknown as Record<string, string>).toString();
       const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
       if (!res.ok) throw new Error(String(res.status));
+      try { localStorage.setItem(RATE_KEY, String(Date.now())); } catch {}
       form.reset();
-      status.className = 'form-status ok';
-      status.textContent = 'Merci ! Votre message est bien parti. Nous vous répondons sous 24 h ouvrées.';
+      fields.forEach((f) => { f.removeAttribute('aria-invalid'); delete f.dataset.touched; });
+      status.className = 'form-status ok'; status.textContent = okText;
     } catch {
       status.className = 'form-status err';
       status.innerHTML = 'L’envoi a échoué. Écrivez-nous directement à <a href="mailto:socoocapk@gmail.com">socoocapk@gmail.com</a> ou sur WhatsApp.';

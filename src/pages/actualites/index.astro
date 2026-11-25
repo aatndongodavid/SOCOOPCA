@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { site } from '../../data/site';
+
+const items = (await getCollection('actualites', (e) => !e.data.draft)).sort((a, b) => +b.data.date - +a.data.date);
+const fmt = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+---
+<Base title={`Actualités – ${site.name}`} description="Toutes les actualités de la coopérative SOCOOCA PK : produits, campagnes, pépinière, assemblées.">
+  <section class="page-hero grain">
+    <div class="wrap">
+      <span class="eyebrow">Actualités</span>
+      <h1 class="display" style="margin-top:20px">Les nouvelles de <em>la coopérative.</em></h1>
+    </div>
+  </section>
+  <section class="section" style="padding-top:60px">
+    <div class="wrap">
+      <div class="news-list">
+        {items.map((n) => (
+          <article class="news-item">
+            <div class="news-meta"><time datetime={n.data.date.toISOString()}>{fmt.format(n.data.date)}</time><span>{n.data.tag}</span></div>
+            <div><h2 style="font-size:clamp(1.4rem,1.1rem + 1.2vw,2.1rem);line-height:1.12"><a href={`/actualites/${n.id}/`} style="text-decoration:none">{n.data.title}</a></h2><p>{n.data.summary}</p></div>
+            <a class="round" href={`/actualites/${n.id}/`} aria-label={`Lire : ${n.data.title}`}><Icon name="arrow" /></a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

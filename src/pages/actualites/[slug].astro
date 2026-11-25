@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { site, wa } from '../../data/site';
+
+export async function getStaticPaths() {
+  const items = await getCollection('actualites', (e) => !e.data.draft);
+  return items.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const fmt = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const link = wa(d.whatsapp ?? `Bonjour, j'ai lu l'actualité « ${d.title} » sur le site de SOCOOCA PK.`, d.boil ? site.boilWhatsapp : site.whatsapp);
+const ld = {
+  '@context': 'https://schema.org', '@type': 'NewsArticle', headline: d.title, datePublished: d.date.toISOString(),
+  description: d.summary, inLanguage: 'fr', author: { '@type': 'Organization', name: site.name },
+  publisher: { '@type': 'Organization', name: site.name }, image: `${site.url}/og-image.jpg`,
+  mainEntityOfPage: `${site.url}/actualites/${entry.id}/`,
+};
+---
+<Base title={`${d.title} – ${site.name}`} description={d.summary} type="article" published={d.date}>
+  <section class="page-hero grain">
+    <div class="wrap">
+      <span class="eyebrow">{d.tag} · <time datetime={d.date.toISOString()}>{fmt.format(d.date)}</time></span>
+      <h1 class="display" style="margin-top:20px;max-width:18em">{d.title}</h1>
+    </div>
+  </section>
+  <article class="wrap prose">
+    <Content />
+    <p style="margin-top:40px"><a class="btn" href={link} target="_blank" rel="noopener noreferrer" style="color:#fff;text-decoration:none">{d.cta} <span class="arr"><Icon name="arrow" /></span></a></p>
+    <p style="margin-top:32px"><a href="/actualites/">← Toutes les actualités</a></p>
+  </article>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</Base>

@@ -1,5 +1,7 @@
 ---
 import { Image, getImage } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Faq from '../components/Faq.astro';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import emblem from '../assets/emblem.png';
@@ -12,7 +14,9 @@ import p5 from '../assets/photo-5.jpg';
 import p6 from '../assets/photo-6.jpg';
 import p7 from '../assets/photo-7.jpg';
 import p8 from '../assets/photo-8.jpg';
-import { site, wa, values, stats, ticker, news, subjects } from '../data/site';
+import { site, wa, values, stats, ticker, subjects, doors, faq } from '../data/site';
+
+const news = (await getCollection('actualites', (e) => !e.data.draft)).sort((a, b) => +b.data.date - +a.data.date).slice(0, 3);
 
 const fmt = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 
@@ -40,7 +44,7 @@ const orderGeneral = wa('Bonjour, je souhaite connaître les produits actuelleme
 const orderBoil = wa('Bonjour SOCOOCA PK, je suis intéressé(e) par la bouteille B-OIL (huile rouge 100 % naturelle). Je souhaite connaître les disponibilités et passer commande.', site.boilWhatsapp);
 const ringText = 'Koukoué · Cameroun · Coopérative · Depuis la graine · ';
 ---
-<Base schema>
+<Base schema intro>
   <!-- ═══ HERO ═══ -->
   <section class="hero grain" id="accueil" aria-labelledby="h1">
     <div class="wrap hero-grid">
@@ -93,6 +97,18 @@ const ringText = 'Koukoué · Cameroun · Coopérative · Depuis la graine · ';
       <ul>{ticker.map((t) => <li>{t}</li>)}</ul>
     </div>
   </div>
+
+  <!-- ═══ TROIS PORTES ═══ -->
+  <section class="section" style="padding-bottom:0" aria-label="Que souhaitez-vous faire ?">
+    <div class="wrap doors">
+      {doors.map((d, i) => (
+        <a class="door" href={d.href} data-reveal style={`--d:${i * 100}ms`}>
+          <span class="n">{d.num}</span><h3>{d.title}</h3><p>{d.text}</p>
+          <span class="go">{d.cta} <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+        </a>
+      ))}
+    </div>
+  </section>
 
   <!-- ═══ COOPÉRATIVE ═══ -->
   <section class="section" id="cooperative" aria-labelledby="coop-title">
@@ -153,6 +169,7 @@ const ringText = 'Koukoué · Cameroun · Coopérative · Depuis la graine · ';
         <div class="price-row" data-reveal style="--d:260ms">
           <div class="price"><b>1 250</b><span>FCFA · le litre</span></div>
           <a class="btn btn--amber" href={orderBoil} target="_blank" rel="noopener noreferrer"><Icon name="wa" class="ico" />Commander sur WhatsApp <span class="arr"><Icon name="arrow" /></span></a>
+          <a class="btn btn--ghost" href="/b-oil/">Fiche produit</a>
         </div>
         <p class="boil-contacts" data-reveal style="--d:300ms">
           Livraison et expédition possibles · Contact B-OIL :
@@ -198,7 +215,7 @@ const ringText = 'Koukoué · Cameroun · Coopérative · Depuis la graine · ';
 
         <article class="tile solid-cream t-viv" id="vivrieres" data-reveal>
           <svg class="glyph" viewBox="0 0 100 100"><path d="M50 92V40"/><path d="M50 44C38 20 18 18 6 26c4 20 20 28 44 18Z"/><path d="M50 52C62 28 82 26 94 34c-4 20-20 28-44 18Z"/></svg>
-          <span class="num" style="color:var(--oil)">04 · Cultures vivrières</span>
+          <span class="num" style="color:var(--oil-deep)">04 · Cultures vivrières</span>
           <h3>La base de l’alimentation locale.</h3>
           <p style="color:var(--muted)">Pour nourrir les marchés de la région.</p>
           <div class="tags"><span>Banane-plantain</span><span>Igname</span><span>Macabo</span><span>Ananas</span></div>
@@ -258,14 +275,14 @@ const ringText = 'Koukoué · Cameroun · Coopérative · Depuis la graine · ';
       <div class="news-list">
         {news.map((n) => (
           <article class="news-item" data-reveal>
-            <div class="news-meta"><time datetime={n.date}>{fmt.format(new Date(n.date))}</time><span>{n.tag}</span></div>
-            <div><h3>{n.title}</h3><p>{n.text}</p></div>
-            <a class="round" href={n.wa} target="_blank" rel="noopener noreferrer" aria-label={`${n.cta} : ${n.title}`}><Icon name="arrow" /></a>
+            <div class="news-meta"><time datetime={n.data.date.toISOString()}>{fmt.format(n.data.date)}</time><span>{n.data.tag}</span></div>
+            <div><h3><a href={`/actualites/${n.id}/`} style="text-decoration:none">{n.data.title}</a></h3><p>{n.data.summary}</p></div>
+            <a class="round" href={`/actualites/${n.id}/`} aria-label={`Lire : ${n.data.title}`}><Icon name="arrow" /></a>
           </article>
         ))}
       </div>
       <div class="news-foot" data-reveal>
-        <a class="btn btn--ink" href={wa('Bonjour, je souhaite recevoir les actualités de SOCOOCA PK.')} target="_blank" rel="noopener noreferrer">Recevoir les actualités sur WhatsApp <span class="arr"><Icon name="wa" /></span></a>
+        <a class="btn btn--ink" href="/actualites/">Toutes les actualités <span class="arr"><Icon name="arrow" /></span></a>
       </div>
     </div>
   </section>
@@ -308,6 +325,14 @@ const ringText = 'Koukoué · Cameroun · Coopérative · Depuis la graine · ';
     </div>
   </section>
 
+  <!-- ═══ FAQ ═══ -->
+  <section class="section" id="faq-section" aria-labelledby="faq-title" style="padding-bottom:0">
+    <div class="wrap faq-grid">
+      <div data-reveal="left"><span class="eyebrow">Questions fréquentes</span><h2 class="h2" id="faq-title" style="margin-top:20px">Vous vous <em>demandez…</em></h2></div>
+      <div data-reveal="right"><Faq items={faq} /></div>
+    </div>
+  </section>
+
   <!-- ═══ CONTACT ═══ -->
   <section class="section" id="contact" aria-labelledby="contact-title">
     <div class="wrap contact-grid">
@@ -315,18 +340,18 @@ const ringText = 'Koukoué · Cameroun · Coopérative · Depuis la graine · ';
         <span class="eyebrow">Contactez-nous</span>
         <h2 class="h2" id="contact-title" style="margin-top:20px">Parlons de votre <em>projet.</em></h2>
         <p class="lead" style="margin-top:22px">Rejoindre la coopérative, commander nos produits, établir un partenariat : notre équipe vous répond.</p>
-        <dl class="contact-list" style="margin:44px 0 0">
-          <div class="c-row"><dt>Adresse</dt><dd style="margin:0"><span>{site.address}</span></dd></div>
+        <div class="contact-list">
+          <div class="c-row"><b>Adresse</b><span>{site.address}</span></div>
           {site.phones.map((p) => <a class="c-row" href={`tel:${p.tel}`}><b>{p.label}</b><span>{p.display}</span></a>)}
           <a class="c-row" href={`mailto:${site.email}?subject=Contact%20SOCOOCA%20PK`}><b>Email</b><span>{site.email}</span></a>
-          <div class="c-row"><dt>Horaires</dt><dd style="margin:0"><span style="font-size:1.1rem">{site.hours}</span></dd></div>
-        </dl>
-        <p class="big-wa"><a class="btn" style="--bg:#1f9d55" href={wa('Bonjour, je souhaite contacter SOCOOCA PK.')} target="_blank" rel="noopener noreferrer">Écrire sur WhatsApp <span class="arr"><Icon name="wa" /></span></a></p>
+          <div class="c-row"><b>Horaires</b><span style="font-size:1.1rem">{site.hours}</span></div>
+        </div>
+        <p class="big-wa"><a class="btn" style="--bg:#15733f" href={wa('Bonjour, je souhaite contacter SOCOOCA PK.')} target="_blank" rel="noopener noreferrer">Écrire sur WhatsApp <span class="arr"><Icon name="wa" /></span></a></p>
       </div>
 
-      <form class="form" id="contactForm" name="contact" method="POST" action="/merci/" data-netlify="true" netlify-honeypot="bot-field" data-reveal="right">
+      <form class="form" id="contactForm" novalidate name="contact" method="POST" action="/merci/" data-netlify="true" netlify-honeypot="bot-field" data-reveal="right">
         <input type="hidden" name="form-name" value="contact" />
-        <p class="hp" aria-hidden="true"><label>Ne pas remplir <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+        <p class="hp" aria-hidden="true"><label>Ne pas remplir <input name="bot-field" data-hp tabindex="-1" autocomplete="off" /></label></p>
         <h3>Envoyez-nous un message</h3>
         <p>Nous répondons généralement sous 24 h ouvrées.</p>
         <div class="row">
@@ -344,6 +369,7 @@ const ringText = 'Koukoué · Cameroun · Coopérative · Depuis la graine · ';
           </div>
         </div>
         <div class="field"><label for="f-msg">Votre message *</label><textarea id="f-msg" name="message" placeholder="Décrivez votre demande…" required></textarea></div>
+        <label class="consent"><input id="f-consent" name="consentement" type="checkbox" required /><span>J’accepte que mes informations soient utilisées pour répondre à ma demande. <a href="/confidentialite/">En savoir plus</a></span></label>
         <button class="btn btn--amber" type="submit"><span class="lbl">Envoyer le message</span> <span class="arr"><Icon name="arrow" /></span></button>
         <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
       </form>

@@ -8,12 +8,12 @@ const order = wa('Bonjour, je souhaite passer une commande chez SOCOOCA PK.');
 <div class="progress" id="progress" aria-hidden="true"></div>
 <header class="header" id="header">
   <div class="wrap">
-    <a class="brand" href="/" aria-label={`${site.name}, accueil`}>
+    <a class="brand" href="/">
       <Image src={emblem} alt="" width={92} height={92} loading="eager" />
       <span><strong>{site.name}</strong><small>Producteurs de Koukoué</small></span>
     </a>
     <nav class="nav" aria-label="Navigation principale">
-      {nav.map((n) => <a href={n.href} data-nav={n.href.replace('/#', '')}>{n.label}</a>)}
+      {nav.map((n) => <a href={n.href} data-nav={n.href.startsWith('/#') ? n.href.slice(2) : undefined}>{n.label}</a>)}
     </nav>
     <div class="header-cta">
       <a class="btn btn--amber btn--sm" href={order} target="_blank" rel="noopener noreferrer">

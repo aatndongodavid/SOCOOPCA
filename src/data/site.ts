@@ -25,7 +25,7 @@ export const wa = (message: string, number = site.whatsapp) =>
 
 export const nav = [
   { href: '/#cooperative', label: 'La coopérative' },
-  { href: '/#b-oil', label: 'B-OIL' },
+  { href: '/b-oil/', label: 'B-OIL' },
   { href: '/#productions', label: 'Productions' },
   { href: '/#parcours', label: 'Parcours' },
   { href: '/#actualites', label: 'Actualités' },
@@ -51,41 +51,6 @@ export const ticker = [
   'Macabo', 'Ananas', 'Banane-plantain', 'Canards', 'Escargots',
 ];
 
-export const news = [
-  {
-    date: '2026-09-23',
-    tag: 'Nouveau produit',
-    title: 'B-OIL : l’authenticité au cœur de votre cuisine',
-    text: 'Une huile rouge 100 % naturelle et bio, extraite selon des méthodes traditionnelles pour préserver sa richesse, sa saveur unique et sa belle couleur dorée. Disponible dès maintenant.',
-    cta: 'Commander ma bouteille',
-    wa: wa('Bonjour, j’ai vu l’annonce du nouveau produit B-OIL et je souhaite en savoir plus.', site.boilWhatsapp),
-  },
-  {
-    date: '2026-05-12',
-    tag: 'Campagne 2026',
-    title: 'Ouverture de la campagne de collecte des régimes de palme',
-    text: 'La campagne annuelle de collecte des régimes de noix de palme a officiellement démarré à Koukoué. Les membres sont invités à se rapprocher des points de collecte dès le 12 mai 2026.',
-    cta: 'En savoir plus',
-    wa: wa('Bonjour, j’ai vu l’actualité sur la campagne de collecte 2026 chez SOCOOCA PK.'),
-  },
-  {
-    date: '2026-04-28',
-    tag: 'Pépinière',
-    title: 'Nouveau stock de plants de cacao disponibles',
-    text: 'Un nouveau lot de plants de cacao sélectionnés est disponible à la pépinière. Commandez dès maintenant pour préparer la prochaine saison de plantation.',
-    cta: 'Commander des plants',
-    wa: wa('Bonjour, je voudrais des informations sur les plants de cacao disponibles chez SOCOOCA PK.'),
-  },
-  {
-    date: '2026-04-15',
-    tag: 'Assemblée',
-    title: 'Assemblée Générale ordinaire : compte-rendu',
-    text: 'L’Assemblée Générale ordinaire du deuxième trimestre 2026 a eu lieu le 15 avril à Koukoué. Les membres ont validé le plan de campagne et élu les représentants des sous-groupes de production.',
-    cta: 'Nous contacter',
-    wa: wa('Bonjour, je voudrais le compte-rendu de l’Assemblée Générale de SOCOOCA PK d’avril 2026.'),
-  },
-];
-
 export const subjects = [
   ['adhesion', 'Adhésion à la coopérative'],
   ['commande-plants-cacao', 'Commander des plants de cacao'],
@@ -95,4 +60,61 @@ export const subjects = [
   ['partenariat', 'Partenariat commercial'],
   ['information', 'Demande d’information'],
   ['autre', 'Autre'],
+];
+
+export const doors = [
+  {
+    num: '01', title: 'Commander', text: 'Huile rouge B-OIL, plants de cacao et de palmier : demandez les disponibilités.',
+    cta: 'Voir B-OIL', href: '/b-oil/',
+  },
+  {
+    num: '02', title: 'Planter', text: 'Une pépinière de palmiers à huile et de cacaoyers pour préparer votre prochaine saison.',
+    cta: 'Demander des plants', href: '/?sujet=commande-plants-palmier#contact',
+  },
+  {
+    num: '03', title: 'Rejoindre', text: 'Produire avec nous : intrants, formation, pressoir et débouchés équitables.',
+    cta: 'Devenir membre', href: '/?sujet=adhesion#contact',
+  },
+];
+
+export const faq = [
+  {
+    q: 'Comment passer commande ?',
+    a: `Par WhatsApp au +237 678 607 540 (ou au 689 588 586 pour B-OIL), par téléphone ou avec le formulaire de contact. Nous confirmons les disponibilités avant toute commande.`,
+  },
+  {
+    q: 'Quels produits sont disponibles en ce moment ?',
+    a: 'L’huile rouge B-OIL est disponible, ainsi que des plants de cacao et de palmier à huile à la pépinière. Les stocks évoluent avec les saisons : écrivez-nous pour une réponse à jour.',
+  },
+  {
+    q: 'Comment rejoindre la coopérative ?',
+    a: 'Choisissez « Adhésion à la coopérative » dans le formulaire de contact, ou appelez-nous. Nous vous recontactons pour échanger sur votre exploitation et les modalités d’entrée.',
+  },
+  {
+    q: 'Peut-on faire presser ses régimes de palme chez vous ?',
+    a: 'Oui, la coopérative dispose d’un pressoir communautaire. Choisissez « Réserver le service de pressoir » dans le formulaire pour convenir d’une date.',
+  },
+  {
+    q: 'Où êtes-vous et quand répondez-vous ?',
+    a: 'Nous sommes à Koukoué, dans la Région du Littoral. L’équipe répond du lundi au vendredi, de 8h00 à 17h00 (heure de Douala), et les messages WhatsApp sont lus dès que possible.',
+  },
+];
+
+export const boilFaq = [
+  {
+    q: 'Qu’est-ce que B-OIL ?',
+    a: 'B-OIL est l’huile de palme rouge de SOCOOCA PK : 100 % naturelle, sans additifs, pressée par la coopérative à Koukoué selon des méthodes traditionnelles.',
+  },
+  {
+    q: 'Quel est le prix ?',
+    a: 'Le litre est proposé à 1 250 FCFA. Utilisez le calculateur ci-dessus pour préparer votre commande, nous confirmons le montant et les disponibilités sur WhatsApp.',
+  },
+  {
+    q: 'Livrez-vous ?',
+    a: 'Oui, la livraison et l’expédition sont possibles. Les modalités et les frais dépendent de votre localisation : indiquez-la dans votre message.',
+  },
+  {
+    q: 'Comment payer ?',
+    a: 'Le mode de paiement est convenu directement avec nous lors de la confirmation de commande, par WhatsApp ou par téléphone.',
+  },
 ];

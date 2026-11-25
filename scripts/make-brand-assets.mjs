@@ -7,6 +7,8 @@ const emblem = await sharp('src/assets/logo.png')
   .toBuffer();
 await sharp(emblem).resize(512, 512, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toFile('src/assets/emblem.png');
 await sharp(emblem).resize(180, 180, { fit: 'contain', background: '#fbf8f1' }).png().toFile('public/apple-touch-icon.png');
+await sharp(emblem).resize(192, 192, { fit: 'contain', background: '#fbf8f1' }).png().toFile('public/icon-192.png');
+await sharp(emblem).resize(512, 512, { fit: 'contain', background: '#fbf8f1' }).png().toFile('public/icon-512.png');
 await sharp(emblem).resize(48, 48, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toFile('public/favicon-48.png');
 
 // Open Graph 1200x630 : photo de palmeraie + voile + emblème

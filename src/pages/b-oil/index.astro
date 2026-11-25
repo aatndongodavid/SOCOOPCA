@@ -1,0 +1,116 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Faq from '../../components/Faq.astro';
+import boil from '../../assets/b-oil.jpg';
+import p6 from '../../assets/photo-6.jpg';
+import p5 from '../../assets/photo-5.jpg';
+import { site, boilFaq } from '../../data/site';
+
+const PRICE = 1250;
+const benefits = [
+  ['100 % naturelle', 'Une huile rouge sans additifs, ni conservateurs.'],
+  ['Pressée par nos soins', 'Extraite à Koukoué selon des méthodes traditionnelles, au pressoir de la coopérative.'],
+  ['Riche en nutriments', 'Elle conserve la richesse, la saveur et la couleur du fruit du palmier.'],
+  ['Pour toutes vos recettes', 'Sauces, plats mijotés, cuisine de tous les jours : toute la famille s’y retrouve.'],
+];
+const ld = {
+  '@context': 'https://schema.org', '@type': 'Product', name: 'B-OIL – huile de palme rouge 100 % naturelle',
+  brand: { '@type': 'Brand', name: 'B-OIL' }, image: `${site.url}/og-image.jpg`,
+  description: 'Huile rouge 100 % naturelle, sans additifs, pressée par la coopérative SOCOOCA PK à Koukoué.',
+  offers: { '@type': 'Offer', priceCurrency: 'XAF', price: String(PRICE), availability: 'https://schema.org/InStock', url: `${site.url}/b-oil/` },
+};
+---
+<Base title="B-OIL – Huile de palme rouge 100 % naturelle | SOCOOCA PK" description="B-OIL, l’huile rouge 100 % naturelle pressée par la coopérative SOCOOCA PK à Koukoué. 1 250 FCFA le litre, commande par WhatsApp, livraison possible.">
+  <section class="hero boil-hero grain" aria-labelledby="h1">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="hero-pill"><i></i>Disponible dès maintenant</p>
+        <h1 id="h1">B-OIL, l’huile rouge <em>de Koukoué.</em></h1>
+        <p class="lead">100 % naturelle, sans additifs, pressée par nos soins. L’authenticité d’une huile traditionnelle, de la palmeraie à votre cuisine.</p>
+        <div class="hero-actions"><a class="btn btn--amber" href="#commander">Préparer ma commande <span class="arr"><Icon name="arrow" /></span></a></div>
+      </div>
+      <div class="flyer-wrap"><div class="flyer"><Image src={boil} alt="Affiche B-OIL : bouteille d’huile de palme rouge" widths={[420, 640, 860]} sizes="(max-width: 960px) 80vw, 420px" format="webp" quality={72} loading="eager" /></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">Pourquoi B-OIL</span>
+      <h2 class="h2" style="margin:20px 0 48px">Une huile <em>vraie</em>, sans détour.</h2>
+      <ul class="values" style="margin-top:0">
+        {benefits.map(([t, d]) => <li data-reveal><h3>{t}</h3><p>{d}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section on-dark boil grain" id="commander" aria-labelledby="cmd-title" style="padding-block:clamp(70px,9vw,130px)">
+    <div class="wrap calc-grid">
+      <div style="position:relative;z-index:2">
+        <span class="eyebrow">Commander</span>
+        <h2 class="h2" id="cmd-title" style="margin:20px 0 22px">Combien de <em>litres</em> ?</h2>
+        <p class="lead">Choisissez la quantité : nous préparons votre message WhatsApp avec le montant estimé. Disponibilités, livraison et paiement sont confirmés avec vous.</p>
+      </div>
+      <form class="calc" id="calc" data-price={PRICE} data-number={site.boilWhatsapp} onsubmit="return false">
+        <div class="calc-row">
+          <button type="button" class="qty-btn" data-step="-1" aria-label="Retirer un litre">−</button>
+          <label class="sr-only" for="qty">Nombre de litres</label>
+          <input id="qty" type="number" inputmode="numeric" min="1" max="500" value="2" />
+          <button type="button" class="qty-btn" data-step="1" aria-label="Ajouter un litre">+</button>
+          <span class="calc-unit">litres</span>
+        </div>
+        <div class="calc-total" aria-live="polite"><span>Montant estimé</span><b id="total">2 500 FCFA</b></div>
+        <div class="field" style="margin-top:20px"><label for="city">Votre ville (pour la livraison)</label><input id="city" type="text" placeholder="Douala, Yaoundé, Paris…" autocomplete="address-level2" /></div>
+        <a class="btn btn--amber" id="calcLink" href="#" target="_blank" rel="noopener noreferrer" style="margin-top:24px;width:100%;justify-content:space-between"><span>Envoyer ma commande sur WhatsApp</span> <span class="arr"><Icon name="wa" /></span></a>
+        <p class="calc-note">Ou appelez : {site.boilPhones.map((p, i) => <><a href={`tel:+237${p.replace(/\s/g, '')}`}>{p}</a>{i < site.boilPhones.length - 1 ? ' / ' : ''}</>)}</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--cream)">
+    <div class="wrap p-grid">
+      <div data-reveal="left">
+        <span class="eyebrow">Du palmier à la bouteille</span>
+        <h2 class="h2" style="margin:20px 0 22px">Pressée <em>chez nous.</em></h2>
+        <p class="lead">Les régimes récoltés par nos membres sont transformés au pressoir communautaire de Koukoué. L’huile s’écoule, rouge et dorée, avant d’être mise en bouteille.</p>
+      </div>
+      <div style="display:grid;gap:18px" data-reveal="right">
+        <div class="frame" style="aspect-ratio:16/10"><Image src={p6} alt="L’huile rouge coule au pressoir dans un entonnoir" widths={[480, 800, 1100]} sizes="(max-width: 960px) 90vw, 55vw" format="webp" quality={72} /></div>
+        <div class="frame" style="aspect-ratio:16/10"><Image src={p5} alt="Palmeraie de Koukoué" widths={[480, 800, 1100]} sizes="(max-width: 960px) 90vw, 55vw" format="webp" quality={72} /></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap faq-grid">
+      <div><span class="eyebrow">Questions fréquentes</span><h2 class="h2" style="margin-top:20px">Tout savoir sur <em>B-OIL.</em></h2></div>
+      <Faq items={boilFaq} id="faq-boil" />
+    </div>
+  </section>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</Base>
+
+<script>
+  const form = document.getElementById('calc');
+  if (form) {
+    const price = Number(form.dataset.price), number = form.dataset.number!;
+    const qty = document.getElementById('qty') as HTMLInputElement;
+    const city = document.getElementById('city') as HTMLInputElement;
+    const total = document.getElementById('total')!;
+    const link = document.getElementById('calcLink') as HTMLAnchorElement;
+    const fmt = new Intl.NumberFormat('fr-FR');
+    const update = () => {
+      const n = Math.min(500, Math.max(1, Math.floor(Number(qty.value) || 1)));
+      const sum = fmt.format(n * price).replace(/ | /g, ' ');
+      total.textContent = `${sum} FCFA`;
+      const msg = `Bonjour SOCOOCA PK, je souhaite commander ${n} litre${n > 1 ? 's' : ''} de B-OIL (${sum} FCFA)` +
+        (city.value.trim() ? `, livraison à ${city.value.trim()}` : '') + '. Pouvez-vous me confirmer la disponibilité ?';
+      link.href = `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;
+    };
+    form.querySelectorAll<HTMLButtonElement>('.qty-btn').forEach((b) => b.addEventListener('click', () => {
+      qty.value = String(Math.min(500, Math.max(1, (Number(qty.value) || 1) + Number(b.dataset.step)))); update();
+    }));
+    qty.addEventListener('input', update); city.addEventListener('input', update); update();
+  }
+</script>

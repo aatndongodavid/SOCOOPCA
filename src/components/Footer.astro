@@ -17,7 +17,7 @@ const year = new Date().getFullYear();
       </div>
       <div>
         <h4>Navigation</h4>
-        <ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}</ul>
+        <ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}<li><a href="/actualites/">Toutes les actualités</a></li></ul>
       </div>
       <div>
         <h4>Contact</h4>
@@ -34,7 +34,7 @@ const year = new Date().getFullYear();
   <div class="f-bottom">
     <div class="wrap" style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 32px;">
       <span>© {year} {site.name} · Tous droits réservés · <a href="/mentions-legales/">Mentions légales</a> · <a href="/confidentialite/">Confidentialité</a></span>
-      <span>Conçu pour les producteurs de Koukoué, Cameroun</span>
+      <span>Site conçu par <a href="https://gemula.org" target="_blank" rel="noopener">Gemula</a> pour les producteurs de Koukoué</span>
     </div>
   </div>
 </footer>
